@@ -1,0 +1,66 @@
+#ifndef _4TH_RK_HPP_
+#define _4TH_RK_HPP_
+
+//	maximum number of iterations
+#ifndef _ITER_MAX_
+
+// void RK4( double(*f1)(double t, double x1), 
+// 		  double(*g1)(double t, double x, double y, double z),
+// 		  double(*f2)(double t, double y1), 
+// 		  double(*g2)(double t, double x, double y, double z), 
+// 		  double(*f3)(double t, double z1), 
+// 		  double(*g3)(double t, double x, double y, double z),
+// 		  double initial[7], 
+// 		  double resu[7], 
+// 		  double H );
+
+//	===============================================================================
+// 	define a structure to store the right hand side of the ODEs and parameters that
+//	are needed to perform the calculations of the right hand side.
+typedef struct{
+	int dim;
+	void func(double x, double *y, void *params);
+	void *params;
+} ODE_System;
+
+//	===============================================================================
+//	Initialize the ODE system
+void Init_ODE_System( 	ODE_System *sys, 
+						void func(double x, double *y, void *params),
+						void *params,
+						int dim ){
+	sys->dim	= dim;
+	sys->func	= func;
+	sys->params	= params;
+}
+
+//	===============================================================================
+//	Evolve the ODE system from x to x + h.
+void Evolve_OneStep_RK4th(  double x, 
+						    double y[], 
+						    void *ode_sys,
+							double h,					//	step_size
+							double eps_rel,				//	relative error
+							double eps_abs 				//	absolute error
+							){
+
+	ODE_System *sys = static_cast<ODE_System*>(ode_sys);
+	double *y_tmp = new double[sys->dim];
+	double *y_new = new double[sys->dim];
+
+	for( int i=0; i<sys->dim; ++i ){
+		y_tmp[i] = y[i];
+	}
+
+
+
+	delete[] y_tmp;
+	delete[] y_new;
+}
+
+void ODE_Solver_RK4th( 	double x0, 
+						double x1,
+					 	double y0[],
+					 	ODE_system sys );
+
+#endif
